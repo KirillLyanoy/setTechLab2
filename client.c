@@ -65,6 +65,11 @@ int sock;
         }
         printf("Число %d отправлено на сервер.\n", i);
 
+        int data;
+        recv(sock, &data, sizeof(data), 0);
+        printf("Число %d получено от сервера.\n", data);
+        
+
         sleep(2);
     }
 
