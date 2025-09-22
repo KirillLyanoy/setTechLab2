@@ -20,6 +20,8 @@ int BufWork(int sockClient) {
     int data;
     int msgLength;
 
+    
+
     while (1) {
         if( ( msgLength = recv( sockClient, &data, sizeof(int), 0 ) ) < 0 ){
             perror("Плохое получение дочерним процессом."); 
@@ -31,8 +33,14 @@ int BufWork(int sockClient) {
             break;
         }
 
-        printf( "SERVER: Сокет клиента: %d\n", sockClient);
         printf( "SERVER: Полученное число: %d\n\n", data);
+
+        data = data * data;
+
+        if (send (sockClient, &data, sizeof(data), 0) < 0) {
+            printf("Ошибка передачи данных клиенту./n");           
+        }
+
     }
 }
 
@@ -65,7 +73,8 @@ int main() {
     signal(SIGCHLD, reaper);
 
     while(1) {
-        sockClient = accept( sockMain, 0, 0 );
+
+        sockClient = accept(sockMain, 0, 0);
 
         PID = fork();
 
@@ -75,8 +84,7 @@ int main() {
         }
 
         if (PID > 0) {
-            printf("Создан процесс %d\n", PID);
-            return 1;
+            printf("Создан процесс %d\n", PID);          
         }
 
         if (PID == 0) {
